@@ -1,6 +1,6 @@
 # This workflow will scrape and save covid vaccine availability data.
 
-name: Python application
+name: Scrape
 
 on:
   schedule:
