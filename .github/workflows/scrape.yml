@@ -24,5 +24,7 @@ jobs:
         pip install -r requirements.txt
     - name: Scrape
       run: python scrape.py
-    - uses: mikeal/publish-to-github-action@main
-      env: ${{ secrets.GITHUB_TOKEN }} # GitHub sets this for you
+    - uses: mikeal/publish-to-github-action@master
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub sets this for you
+        BRANCH_NAME: main
