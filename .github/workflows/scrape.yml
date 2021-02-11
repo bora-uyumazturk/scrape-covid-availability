@@ -4,7 +4,7 @@ name: Scrape
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # every hour
+    - cron: '*/10 * * * *' # every ten minutes
 
 jobs:
   build:
