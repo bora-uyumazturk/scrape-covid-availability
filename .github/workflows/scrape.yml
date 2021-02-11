@@ -3,9 +3,10 @@
 name: Scrape
 
 on:
-  schedule:
-    - cron: '*/10 * * * *' # every ten minutes
-
+  pull_request:
+    branches:
+      - main
+  
 jobs:
   build:
 
