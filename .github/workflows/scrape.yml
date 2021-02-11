@@ -24,7 +24,14 @@ jobs:
         pip install -r requirements.txt
     - name: Scrape
       run: python scrape.py
-    - uses: mikeal/publish-to-github-action@master
-      env: 
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub sets this for you
-        BRANCH_NAME: main
+    - name: Commit files
+      run: |
+        git config --global user.email "bora.uyumazturk@gmail.com"
+        git config --global user.name "Bora Uyumazturk"
+        timestamp=$(date -u)
+        git commit -m "Latest data: ${timestamp}" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub sets this for you
+        branch: main
