@@ -5,16 +5,16 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-CVS_VACCINE_PAGE = '/immunizations/covid-19-vaccine?icid=cvs-home-hero1-banner-1-coronavirus-vaccine'
+CVS_VACCINE_PAGE = '/immunizations/covid-19-vaccine'
 CVS_ROOT = 'https://www.cvs.com'
 OUTPUT_PATH = 'data/vaccine_info.csv'
 
 
-def get_resource(url):
+def get_resource(url, headers={}):
     """Make request and handle response."""
-    resp = requests.get(url)
+    resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
-        raise Exception(f'Recieved code: {page.status_code}')
+        raise Exception(f'Recieved code: {resp.status_code}')
     return resp
 
 
@@ -31,7 +31,9 @@ def cvs_json_to_df(state, state_data):
 
 def scrape_cvs():
     """Scrape and return CVS data."""
-    page = get_resource(CVS_ROOT + CVS_VACCINE_PAGE)
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+               "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
+    page = get_resource(CVS_ROOT + CVS_VACCINE_PAGE, headers)
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -46,7 +48,7 @@ def scrape_cvs():
 
     state_dfs = []
     for state, url in state_urls.items():
-        state_response = get_resource(url)
+        state_response = get_resource(url, headers)
         state_df = cvs_json_to_df(state, state_response.json())
         state_dfs.append(state_df)
 
