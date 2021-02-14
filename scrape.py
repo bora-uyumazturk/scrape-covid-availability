@@ -31,9 +31,9 @@ def cvs_json_to_df(state, state_data):
 
 def scrape_cvs():
     """Scrape and return CVS data."""
-    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
-               "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
-    page = get_resource(CVS_ROOT + CVS_VACCINE_PAGE, headers)
+    page_headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
+    page = get_resource(CVS_ROOT + CVS_VACCINE_PAGE, page_headers)
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -47,8 +47,24 @@ def scrape_cvs():
             modal.find(class_='covid-status').get('data-url')
 
     state_dfs = []
+
+    state_headers = {
+        'authority': 'www.cvs.com',
+        'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+        'accept': '*/*',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'empty',
+        'referer': 'https://www.cvs.com/immunizations/covid-19-vaccine',
+        'accept-language': 'en-US,en;q=0.9',
+        'referrerPolicy': 'strict-origin-when-cross-origin',
+        'mode': 'cors',
+        'credentials': 'include'
+    }
+
     for state, url in state_urls.items():
-        state_response = get_resource(url, headers)
+        print(url)
+        state_response = get_resource(url, state_headers)
         state_df = cvs_json_to_df(state, state_response.json())
         state_dfs.append(state_df)
 
